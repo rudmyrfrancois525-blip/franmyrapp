@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Franmyr</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#15181c;--canvas:#e6e8ea;--paper:#f6f7f8;--red:#9b1f24;--mute:#59616a;--line:#cdd1d5;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+*,*:before,*:after{box-sizing:inherit}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.5 'Barlow',system-ui,sans-serif;padding-bottom:96px}
+body:before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--ink);z-index:6}
+h1,h2,h3{font-family:'Barlow Condensed','Arial Narrow',Impact,sans-serif;text-transform:uppercase;font-weight:800;margin:0;line-height:1}
+header{background:var(--ink);color:#fff;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.lang{display:flex;border:1.5px solid #fff;border-radius:99px;overflow:hidden;flex:none}.lang button{font:600 13px 'Barlow',sans-serif;border:0;background:none;padding:6px 11px;cursor:pointer;color:#fff}.lang button[aria-pressed=true]{background:#fff;color:var(--ink)}header h1{font-size:34px}header p{margin:4px 0 0;color:#b9c0c7;font-size:14px}
+main{max-width:640px;margin:0 auto;padding:20px}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.hb{font:600 13px 'Barlow',sans-serif;border:1.5px solid #fff;border-radius:99px;background:none;color:#fff;padding:6px 14px;cursor:pointer}
+.help{position:fixed;inset:0;background:rgba(21,24,28,.75);z-index:20;display:flex;align-items:center;justify-content:center;padding:20px}.help[hidden]{display:none}
+.hbox{background:var(--paper);max-width:460px;width:100%;max-height:88vh;overflow:auto;padding:24px}.hbox h2{font-size:34px;margin-bottom:12px}.hbox ol{padding-left:20px;margin:0 0 14px}.hbox li{margin:10px 0}
+.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--ink);display:grid;grid-template-columns:repeat(3,1fr);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+.tabs button{background:none;border:0;color:#b9c0c7;padding:16px 8px;font:800 20px 'Barlow Condensed',sans-serif;text-transform:uppercase;cursor:pointer}
+.tabs button[aria-selected=true]{color:#fff;box-shadow:inset 0 3px 0 var(--red)}
+.chips{display:flex;gap:8px;overflow-x:auto;margin-bottom:16px;padding-bottom:4px}
+.chips button{flex:none;border:1.5px solid var(--ink);background:none;padding:7px 16px;font-weight:600;cursor:pointer;border-radius:99px}
+.chips button[aria-pressed=true]{background:var(--ink);color:#fff}
+.bar{height:8px;background:var(--canvas);margin:6px 0 20px}.bar i{display:block;height:100%;background:var(--red);transition:width .2s}
+h3.g{font-size:22px;color:var(--mute);margin:22px 0 4px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.row b{font-weight:600}.row small{display:block;color:var(--mute)}
+.sets{display:flex;gap:8px}
+.sets button{width:44px;height:44px;border-radius:50%;border:2px solid var(--ink);background:none;font-weight:700;cursor:pointer}
+.sets button[aria-pressed=true]{background:var(--red);border-color:var(--red);color:#fff}
+.btn{background:var(--ink);color:#fff;border:0;padding:14px 22px;font-weight:600;cursor:pointer;width:100%;margin-top:20px}
+.btn.alt{background:none;color:var(--ink);border:1.5px solid var(--ink)}
+.timer{text-align:center;padding:26px 0}
+.timer .ph{font:800 28px 'Barlow Condensed',sans-serif;text-transform:uppercase;color:var(--red)}
+.timer .t{font:800 140px/1 'Barlow Condensed',sans-serif}
+.timer .nm{font-size:20px;font-weight:600;min-height:30px}
+.timer.rest .ph{color:var(--mute)}
+.cfg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+label{font-size:14px;color:var(--mute);display:block}
+input,select{width:100%;padding:10px;border:1.5px solid var(--ink);background:#fff;border-radius:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{display:flex;gap:24px;margin:0 0 18px}.kpi b{display:block;font:800 40px/1 'Barlow Condensed',sans-serif;color:var(--red)}.kpi small{color:var(--mute)}
+svg{width:100%;height:auto;display:block;background:var(--canvas);margin:10px 0}
+.hint{color:var(--mute);font-size:14px}
+</style></head>
+<body>
+<header><div><h1>Franmyr</h1><p id="sub"></p></div><div style="display:flex;gap:10px;align-items:center"><button class="hb" id="qm">Help</button><div class="lang" id="lang" role="group" aria-label="Language"></div></div></header>
+<main>
+<section id="p-train">
+<div class="chips" id="progs" role="group" aria-label="Program"></div>
+<div class="bar"><i id="bar"></i></div>
+<div id="list"></div>
+<button class="btn" id="fin">Finish session</button>
+<p class="hint" style="margin-top:12px">Boxing combinations and HIIT are timed. Use the Timer tab.</p>
+</section>
+<section id="p-timer" hidden>
+<label for="ex">What are you doing?</label><select id="ex"></select>
+<div class="cfg"><div><label for="w">Work (s)</label><input id="w" type="number" min="5" value="30" inputmode="numeric"></div><div><label for="r">Rest (s)</label><input id="r" type="number" min="0" value="30" inputmode="numeric"></div><div><label for="n">Sets</label><input id="n" type="number" min="1" value="3" inputmode="numeric"></div></div>
+<div class="timer" id="tm" aria-live="polite"><div class="ph" id="ph">Ready</div><div class="t" id="tt">30</div><div class="nm" id="nm"></div></div>
+<button class="btn" id="go">Start</button><button class="btn alt" id="rs">Reset</button>
+</section>
+<section id="p-prog" hidden>
+<div class="kpi"><div><b id="k1">0</b><small>Sessions</small></div><div><b id="k2">-</b><small>Shoulder : waist</small></div></div>
+<label for="mt">Chart</label><select id="mt"></select>
+<svg id="ch" viewBox="0 0 320 160" role="img" aria-label="Progress chart"></svg><p class="hint" id="chn"></p>
+<h2 style="font-size:30px;margin:22px 0 10px">Log today</h2>
+<div class="two" id="form"></div>
+<button class="btn" id="sv">Save measurements</button>
+</section>
+</main>
+<div class="help" id="help" hidden><div class="hbox" role="dialog" aria-modal="true" aria-labelledby="ht"><h2 id="ht">How to use Franmyr</h2><ol><li>Train: pick a program, then tap the circles next to each exercise to mark your 3 sets. Tap Finish session when you are done.</li><li>Timer: choose a boxing combination or HIIT exercise, set work, rest and sets, then press Start. Turn the volume up for the beeps.</li><li>Progress: enter your own measurements and tap Save measurements. Save again over time to see your chart.</li><li>Language: switch between EN, FR and ES at the top of the screen.</li></ol><p class="hint">Your data stays on this phone and browser. Clearing your browser data erases it.</p><p class="hint">Tip: add this page to your home screen to open it in one tap.</p><button class="btn" id="hx">Got it</button></div></div>
+<nav class="tabs" role="tablist"><button role="tab" data-t="train" aria-selected="true">Train</button><button role="tab" data-t="timer" aria-selected="false">Timer</button><button role="tab" data-t="prog" aria-selected="false">Progress</button></nav>
+<script>
+const $=s=>document.querySelector(s),today=()=>new Date().toISOString().slice(0,10);
+let S=null;try{S=JSON.parse(localStorage.getItem('fa'))}catch(e){}
+S=S||{done:{},sessions:[],meas:[]};S.done=S.done||{};S.sessions=S.sessions||[];S.meas=S.meas||[];
+const OS={weight:80,bodyfat:10,shoulders:48,chest:39,arms:15,waist:28,legs:22,calves:15};if(S.meas.length==1&&Object.keys(OS).every(k=>S.meas[0][k]==OS[k]))S.meas=[];
+const save=()=>{try{localStorage.setItem('fa',JSON.stringify(S))}catch(e){}};
+const PR={
+'Fighter':[['Weight training',['Lateral raises','Seated lateral raises','Overhead press','Military press','Forearm curls','Neck curls']],['Scapular and push-up work',['Scapular pull-ups','Scapular plank','Scapular push-ups','Clap push-ups','Plyometric push-ups']]],
+'Greek':[['Delts',['Overhead press','Lateral raises','Rear delt flyes']],['Back',['Pull-ups','Barbell row','Lat pulldown']],['Chest',['Incline bench press','Flat bench press','Dumbbell flyes']],['Arms',['Barbell curl','Hammer curl','Overhead triceps extension']],['Legs',['Squat','Romanian deadlift','Walking lunges']],['Waist',['Hanging leg raises','Cable crunch','Stomach vacuum']]],
+'Calisthenics':[['Upper body',['Push-ups','Pull-ups','Chin-ups','Dips','Pike push-ups']],['Core and legs',['Sit-ups','Crunches','Bicycle kicks','Heel touches','Leg raises','Flutter kicks','Planks','Squats']]],
+'Resistance':[['Weights',['Lateral raises','Front raises','Military raises','Dumbbell biceps curls','Barbell curls','Deadlift','Bench press','Overhead press','Rear delt flyes','Face pulls']]]};
+let cur=S.cur&&PR[S.cur]?S.cur:'Fighter';
+const keyOf=(g,e)=>cur+'|'+e;
+function total(){return PR[cur].reduce((a,g)=>a+g[1].length*3,0)}
+function renderTrain(){
+$('#progs').innerHTML=Object.keys(PR).map(p=>`<button aria-pressed="${p==cur}" data-p="${p}">${p}</button>`).join('');
+const D=S.done;let n=0;
+$('#list').innerHTML=PR[cur].map(g=>`<h3 class="g">${g[0]}</h3>`+g[1].map(e=>{const a=D[keyOf(g,e)]||[0,0,0];n+=a.filter(Boolean).length;
+return `<div class="row"><div><b>${e}</b><small>3 sets × 10 reps</small></div><div class="sets">${[0,1,2].map(i=>`<button aria-pressed="${!!a[i]}" aria-label="${e}, set ${i+1}" data-e="${e}" data-i="${i}">${i+1}</button>`).join('')}</div></div>`}).join('')).join('');
+$('#bar').style.width=(100*n/total())+'%';
+$('#sub').textContent=S.sessions.length+' sessions logged';$('#k1').textContent=S.sessions.length}
+$('#progs').onclick=e=>{const p=e.target.dataset.p;if(p){cur=p;S.cur=p;save();renderTrain()}};
+$('#list').onclick=e=>{const b=e.target.closest('button');if(!b)return;const k=cur+'|'+b.dataset.e,i=+b.dataset.i;const a=S.done[k]||[0,0,0];a[i]=a[i]?0:1;S.done[k]=a;save();renderTrain()};
+$('#fin').onclick=()=>{const any=PR[cur].some(g=>g[1].some(e=>(S.done[cur+'|'+e]||[]).some(Boolean)));
+if(any)S.sessions.push({d:today(),p:cur});PR[cur].forEach(g=>g[1].forEach(e=>delete S.done[cur+'|'+e]));save();renderTrain();renderProg()};
+// timer
+const CB=['Jab, Cross, Uppercut','Right uppercut, Left hook, Cross','Side body shots','Right overhand, Left uppercut, Right overhand','Jab, Cross, Left hook, Right uppercut','Right hand, Left block, Left body shot, Right body shot, Right lead hook','Jab, Cross, Block, Right uppercut, Left hook','Lazy jab, Slip, Right uppercut, Left hook, Cross','Fake jab, Jab, Right hand'];
+const HI=['Burpees','Mountain climbers','Jump squats','High knees','Jumping jacks','Skater jumps','Squat thrusts','Plank jacks','Tuck jumps','Jumping lunges'];
+$('#ex').innerHTML='<optgroup label="Boxing combinations">'+CB.map((c,i)=>`<option>${c}</option>`).join('')+'</optgroup><optgroup label="HIIT exercises">'+HI.map(c=>`<option>${c}</option>`).join('')+'</optgroup><option>Sprints</option><option>Jump rope</option>';
+let T={run:false,ph:'ready',set:1,end:0,left:30,id:null,ctx:null};
+const beep=(f=880,d=.15)=>{try{if(!T.ctx)T.ctx=new(window.AudioContext||window.webkitAudioContext)();const o=T.ctx.createOscillator(),g=T.ctx.createGain();o.frequency.value=f;o.connect(g);g.connect(T.ctx.destination);g.gain.value=.2;o.start();o.stop(T.ctx.currentTime+d)}catch(e){}};
+const val=id=>Math.max(0,parseInt($(id).value)||0);
+function show(){$('#tt').textContent=Math.ceil(T.left);$('#ph').textContent=T.ph=='work'?'Work · set '+T.set+' of '+val('#n'):T.ph=='rest'?'Rest':T.ph=='done'?'Done':'Ready';$('#tm').className='timer'+(T.ph=='rest'?' rest':'');$('#nm').textContent=$('#ex').value}
+function begin(ph){T.ph=ph;const s=ph=='work'?val('#w'):val('#r');T.end=performance.now()+s*1000;T.left=s;beep(ph=='work'?988:660,.25);show()}
+function tick(){if(!T.run)return;T.left=Math.max(0,(T.end-performance.now())/1000);if(T.left<=0){
+if(T.ph=='work'){if(T.set>=val('#n'))return finish();if(val('#r')>0)begin('rest');else{T.set++;begin('work')}}else{T.set++;begin('work')}}else show()}
+function finish(){clearInterval(T.id);T.run=false;T.ph='done';T.left=0;[0,200,400].forEach(t=>setTimeout(()=>beep(1175,.2),t));$('#go').textContent='Start';show()}
+$('#go').onclick=()=>{if(T.run){T.run=false;T.left=Math.max(0,(T.end-performance.now())/1000);clearInterval(T.id);$('#go').textContent='Resume';return}
+if(T.ph=='ready'||T.ph=='done'){T.set=1;begin('work')}else T.end=performance.now()+T.left*1000;T.run=true;$('#go').textContent='Pause';clearInterval(T.id);T.id=setInterval(tick,200)};
+$('#rs').onclick=()=>{clearInterval(T.id);T.run=false;T.ph='ready';T.set=1;T.left=val('#w');$('#go').textContent='Start';show()};
+['#w','#r','#n','#ex'].forEach(s=>$(s).onchange=()=>{if(!T.run&&T.ph!='work'&&T.ph!='rest'){T.left=val('#w');show()}});
+// progress
+const M=[['weight','Weight (kg)'],['bodyfat','Body fat (%)'],['shoulders','Shoulders (in)'],['chest','Chest (in)'],['arms','Arms (in)'],['waist','Waist (in)'],['legs','Legs (in)'],['calves','Calves (in)']];
+$('#mt').innerHTML=M.map(m=>`<option value="${m[0]}">${m[1]}</option>`).join('');
+const last=()=>S.meas[S.meas.length-1]||{};
+$('#form').innerHTML=M.map(m=>`<div><label for="f-${m[0]}">${m[1]}</label><input id="f-${m[0]}" type="number" step="0.1" placeholder="0" inputmode="decimal"></div>`).join('');
+function fill(){M.forEach(m=>$('#f-'+m[0]).value=last()[m[0]]??'')}
+function renderProg(){const k=$('#mt').value,pts=S.meas.map(x=>+x[k]).filter(v=>!isNaN(v)),L=last();
+$('#k1').textContent=S.sessions.length;$('#k2').textContent=L.waist?(L.shoulders/L.waist).toFixed(2):'-';
+if(!pts.length){$('#ch').innerHTML='';$('#chn').textContent='No entries yet. Save your first measurements below.';return}
+const mn=Math.min(...pts)-1,mx=Math.max(...pts)+1,X=i=>pts.length>1?20+i*(280/(pts.length-1)):160,Y=v=>140-(v-mn)/(mx-mn)*120;
+$('#ch').innerHTML=`<polyline fill="none" stroke="#9b1f24" stroke-width="3" points="${pts.map((v,i)=>X(i)+','+Y(v)).join(' ')}"/>`+pts.map((v,i)=>`<circle cx="${X(i)}" cy="${Y(v)}" r="5" fill="#15181c"/><text x="${X(i)}" y="${Y(v)-10}" font-size="12" text-anchor="middle" fill="#15181c">${v}</text>`).join('');
+const d=pts[pts.length-1]-pts[0];$('#chn').textContent=pts.length+' entries. Change since first entry: '+(d>0?'+':'')+d.toFixed(1)}
+$('#mt').onchange=renderProg;
+$('#sv').onclick=()=>{const e={d:today()};M.forEach(m=>e[m[0]]=parseFloat($('#f-'+m[0]).value)||last()[m[0]]||0);const i=S.meas.findIndex(x=>x.d==e.d);if(i>=0)S.meas[i]=e;else S.meas.push(e);save();renderProg();$('#sv').textContent='Saved';setTimeout(()=>$('#sv').textContent='Save measurements',1500)};
+// tabs
+document.querySelector('.tabs').onclick=e=>{const t=e.target.dataset.t;if(!t)return;document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t==t));['train','timer','prog'].forEach(x=>$('#p-'+x).hidden=x!=t);if(t=='prog'){fill();renderProg()}};
+renderTrain();show();
+</script>
+<script>
+const RW=[
+['Train','Entraînement','Entrenar'],['Timer','Minuteur','Temporizador'],['Progress','Progrès','Progreso'],['Finish session','Terminer la séance','Terminar sesión'],
+['Boxing combinations and HIIT are timed. Use the Timer tab.','La boxe et le HIIT se font au chrono. Utilisez l’onglet Minuteur.','El boxeo y el HIIT son cronometrados. Usa la pestaña Temporizador.'],
+['What are you doing?','Que faites-vous ?','¿Qué estás haciendo?'],['Work (s)','Travail (s)','Trabajo (s)'],['Rest (s)','Repos (s)','Descanso (s)'],['Sets','Séries','Series'],['Reset','Réinitialiser','Reiniciar'],['Start','Démarrer','Iniciar'],['Pause','Pause','Pausa'],['Resume','Reprendre','Reanudar'],['Ready','Prêt','Listo'],['Rest','Repos','Descanso'],['Done','Terminé','Terminado'],
+['Sessions','Séances','Sesiones'],['Shoulder : waist','Épaules : taille','Hombros : cintura'],['Chart','Graphique','Gráfico'],['Log today','Enregistrer aujourd’hui','Registrar hoy'],['Save measurements','Enregistrer les mensurations','Guardar medidas'],['Saved','Enregistré','Guardado'],
+['3 sets × 10 reps','3 séries × 10 reps','3 series × 10 reps'],['set','série','serie'],
+['Fighter','Combattant','Peleador'],['Greek','Grec','Griego'],['Calisthenics','Callisthénie','Calistenia'],['Resistance','Musculation','Resistencia'],
+['Weight training','Musculation','Entrenamiento con pesas'],['Scapular and push-up work','Travail scapulaire et pompes','Trabajo escapular y flexiones'],['Delts','Deltoïdes','Deltoides'],['Back','Dos','Espalda'],['Chest','Pectoraux','Pecho'],['Arms','Bras','Brazos'],['Legs','Jambes','Piernas'],['Waist','Taille','Cintura'],['Upper body','Haut du corps','Tren superior'],['Core and legs','Abdos et jambes','Core y piernas'],['Weights','Poids','Pesas'],
+['Lateral raises','Élévations latérales','Elevaciones laterales'],['Seated lateral raises','Élévations latérales assis','Elevaciones laterales sentado'],['Overhead press','Développé épaules','Press por encima de la cabeza'],['Military press','Développé militaire','Press militar'],['Forearm curls','Curls avant-bras','Curl de antebrazos'],['Neck curls','Curls pour le cou','Curl de cuello'],
+['Scapular pull-ups','Tractions scapulaires','Dominadas escapulares'],['Scapular plank','Gainage scapulaire','Plancha escapular'],['Scapular push-ups','Pompes scapulaires','Flexiones escapulares'],['Clap push-ups','Pompes avec claquement','Flexiones con palmada'],['Plyometric push-ups','Pompes pliométriques','Flexiones pliométricas'],
+['Rear delt flyes','Oiseau (arrière d’épaules)','Vuelos posteriores'],['Pull-ups','Tractions','Dominadas'],['Barbell row','Rowing barre','Remo con barra'],['Lat pulldown','Tirage vertical','Jalón al pecho'],['Incline bench press','Développé incliné','Press de banca inclinado'],['Flat bench press','Développé couché','Press de banca plano'],['Dumbbell flyes','Écartés haltères','Aperturas con mancuernas'],['Barbell curl','Curl à la barre','Curl con barra'],['Hammer curl','Curl marteau','Curl martillo'],['Overhead triceps extension','Extension triceps au-dessus de la tête','Extensión de tríceps sobre la cabeza'],['Squat','Squat','Sentadilla'],['Romanian deadlift','Soulevé de terre roumain','Peso muerto rumano'],['Walking lunges','Fentes marchées','Zancadas caminando'],['Hanging leg raises','Relevés de jambes suspendu','Elevaciones de piernas colgado'],['Cable crunch','Crunch à la poulie','Crunch en polea'],['Stomach vacuum','Vacuum abdominal','Vacío abdominal'],
+['Push-ups','Pompes','Flexiones'],['Chin-ups','Tractions supination','Dominadas supinas'],['Dips','Dips','Fondos'],['Pike push-ups','Pompes en pike','Flexiones pike'],['Sit-ups','Redressements assis','Abdominales'],['Crunches','Crunchs','Crunches'],['Leg raises','Relevés de jambes','Elevaciones de piernas'],['Planks','Gainage','Planchas'],['Squats','Squats','Sentadillas'],
+['Front raises','Élévations frontales','Elevaciones frontales'],['Military raises','Élévations militaires','Elevaciones militares'],['Dumbbell biceps curls','Curl biceps haltères','Curl de bíceps con mancuernas'],['Barbell curls','Curl à la barre','Curl con barra'],['Deadlift','Soulevé de terre','Peso muerto'],['Bench press','Développé couché','Press de banca'],
+['Jab','Jab','Jab'],['Cross','Croisé','Directo'],['Uppercut','Uppercut','Uppercut'],['Right uppercut','Uppercut droit','Uppercut derecho'],['Left uppercut','Uppercut gauche','Uppercut izquierdo'],['Left hook','Crochet gauche','Gancho izquierdo'],['Right overhand','Overhand droit','Overhand derecho'],['Right hand','Direct droit','Derecha'],['Left block','Blocage gauche','Bloqueo izquierdo'],['Left body shot','Coup au corps gauche','Golpe al cuerpo izquierdo'],['Right body shot','Coup au corps droit','Golpe al cuerpo derecho'],['Right lead hook','Crochet droit avancé','Gancho derecho adelantado'],['Block','Blocage','Bloqueo'],['Lazy jab','Jab relâché','Jab relajado'],['Slip','Esquive','Esquiva'],['Fake jab','Feinte de jab','Finta de jab'],['Side body shots','Coups au corps latéraux','Golpes laterales al cuerpo'],
+['Jump squats','Squats sautés','Sentadillas con salto'],['High knees','Montées de genoux','Rodillas altas'],['Skater jumps','Sauts du patineur','Saltos de patinador'],['Jumping lunges','Fentes sautées','Zancadas con salto'],['Jump rope','Corde à sauter','Cuerda'],['Boxing combinations','Enchaînements de boxe','Combinaciones de boxeo'],['HIIT exercises','Exercices HIIT','Ejercicios HIIT'],
+['Weight (kg)','Poids (kg)','Peso (kg)'],['Body fat (%)','Masse grasse (%)','Grasa corporal (%)'],['Shoulders (in)','Épaules (in)','Hombros (in)'],['Chest (in)','Poitrine (in)','Pecho (in)'],['Arms (in)','Bras (in)','Brazos (in)'],['Waist (in)','Taille (in)','Cintura (in)'],['Legs (in)','Jambes (in)','Piernas (in)'],['Calves (in)','Mollets (in)','Pantorrillas (in)']];
+const D=new Map(RW.map(r=>[r[0],{fr:r[1],es:r[2]}]));
+const PT=[[/^(\d+) sessions logged$/,{fr:'$1 séances enregistrées',es:'$1 sesiones registradas'}],[/^Work · set (\d+) of (\d+)$/,{fr:'Travail · série $1 sur $2',es:'Trabajo · serie $1 de $2'}],[/^(\d+) entries\. Change since first entry: (.+)$/,{fr:'$1 entrées. Évolution depuis la première : $2',es:'$1 registros. Cambio desde el primero: $2'}]];
+D.set('No entries yet. Save your first measurements below.',{fr:'Aucune entrée. Enregistrez vos premières mensurations ci-dessous.',es:'Aún no hay registros. Guarda tus primeras medidas abajo.'});
+[['Help','Aide','Ayuda'],['How to use Franmyr','Comment utiliser Franmyr','Cómo usar Franmyr'],['Got it','Compris','Entendido'],
+['Train: pick a program, then tap the circles next to each exercise to mark your 3 sets. Tap Finish session when you are done.','Entraînement : choisissez un programme, puis touchez les cercles à côté de chaque exercice pour valider vos 3 séries. Touchez Terminer la séance quand vous avez fini.','Entrenar: elige un programa y toca los círculos junto a cada ejercicio para marcar tus 3 series. Toca Terminar sesión cuando acabes.'],
+['Timer: choose a boxing combination or HIIT exercise, set work, rest and sets, then press Start. Turn the volume up for the beeps.','Minuteur : choisissez un enchaînement de boxe ou un exercice HIIT, réglez le travail, le repos et les séries, puis appuyez sur Démarrer. Montez le volume pour les bips.','Temporizador: elige una combinación de boxeo o un ejercicio HIIT, ajusta trabajo, descanso y series, y pulsa Iniciar. Sube el volumen para los pitidos.'],
+['Progress: enter your own measurements and tap Save measurements. Save again over time to see your chart.','Progrès : saisissez vos propres mensurations et touchez Enregistrer les mensurations. Enregistrez à nouveau au fil du temps pour voir votre graphique.','Progreso: introduce tus propias medidas y toca Guardar medidas. Vuelve a guardar con el tiempo para ver tu gráfico.'],
+['Language: switch between EN, FR and ES at the top of the screen.','Langue : passez de EN à FR ou ES en haut de l’écran.','Idioma: cambia entre EN, FR y ES en la parte superior de la pantalla.'],
+['Your data stays on this phone and browser. Clearing your browser data erases it.','Vos données restent sur ce téléphone et ce navigateur. Effacer les données du navigateur les supprime.','Tus datos se quedan en este teléfono y navegador. Borrar los datos del navegador los elimina.'],
+['Tip: add this page to your home screen to open it in one tap.','Astuce : ajoutez cette page à votre écran d’accueil pour l’ouvrir en un geste.','Consejo: añade esta página a tu pantalla de inicio para abrirla con un toque.']].forEach(r=>D.set(r[0],{fr:r[1],es:r[2]}));
+let lang='en';
+const tl=(s,l)=>{const d=D.get(s);if(d)return d[l];if(s.includes(', ')){const p=s.split(', ');if(p.every(x=>D.has(x)))return p.map(x=>D.get(x)[l]).join(', ')}for(const [re,o] of PT)if(re.test(s))return s.replace(re,o[l]);return s};
+const tt=s=>lang=='en'?s:tl(s,lang);
+const obs=new MutationObserver(()=>{if(!obs.q){obs.q=1;requestAnimationFrame(()=>{obs.q=0;tx()})}});
+function tx(){obs.disconnect();
+document.querySelectorAll('body *').forEach(el=>{if(el.children.length||el.closest('svg')||/^(SCRIPT|STYLE)$/.test(el.tagName))return;const c=el.textContent;if(el.dataset.en===undefined||c!==el.dataset.tr)el.dataset.en=c.trim();const o=el.dataset.en;if(!o)return;const n=tt(o);if(c!==n)el.textContent=n;el.dataset.tr=n});
+document.querySelectorAll('[data-e]').forEach(b=>b.setAttribute('aria-label',tt(b.dataset.e)+', '+tt('set')+' '+(+b.dataset.i+1)));
+document.querySelectorAll('optgroup').forEach(g=>{if(!g.dataset.en)g.dataset.en=g.label;g.label=tt(g.dataset.en)});
+obs.observe(document.body,{childList:true,subtree:true,characterData:true})}
+function setLang(l){lang=l;document.documentElement.lang=l;tx();show();tx();document.querySelectorAll('#lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l==l));try{localStorage.setItem('lang',l)}catch(e){}}
+$('#lang').innerHTML=['en','fr','es'].map(l=>`<button data-l="${l}" aria-pressed="false">${l.toUpperCase()}</button>`).join('');
+$('#lang').onclick=e=>{const l=e.target.dataset&&e.target.dataset.l;if(l)setLang(l)};
+let s0='en';try{s0=localStorage.getItem('lang')||(navigator.language||'en').slice(0,2)}catch(e){}
+setLang(['fr','es'].includes(s0)?s0:'en');
+$('#qm').onclick=()=>{$('#help').hidden=false;$('#hx').focus()};$('#hx').onclick=()=>{$('#help').hidden=true;$('#qm').focus();try{localStorage.setItem('seen','1')}catch(e){}};document.addEventListener('keydown',e=>{if(e.key=='Escape'&&!$('#help').hidden)$('#hx').click()});
+let seen=0;try{seen=localStorage.getItem('seen')}catch(e){}if(!seen)$('#help').hidden=false;
+</script></body></html>
